@@ -1,13 +1,12 @@
 package net.saifs.odinmc.events.merged;
 
-import net.saifs.odinmc.events.Subscription;
-import net.saifs.odinmc.events.SubscriptionBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import net.saifs.odinmc.events.Subscription;
+import net.saifs.odinmc.events.SubscriptionBuilder;
 
 final class MergedSubscriptionBuilderImpl<Event, Priority, Handled>
     extends SubscriptionBuilder.Base<Handled, Subscription, MergedHandlerList<Event, Handled>, MergedSubscriptionBuilder<Event, Priority, Handled>>
@@ -19,14 +18,13 @@ final class MergedSubscriptionBuilderImpl<Event, Priority, Handled>
     public <Merged extends Event> MergedSubscriptionBuilder<Event, Priority, Handled> bindEvent(
         final Class<Merged> cls,
         final Priority priority,
-         final Function<Merged, Handled> mapping,
-         final BiConsumer<Merged, Throwable> exceptionConsumer
+        final Function<Merged, Handled> mapping,
+        final BiConsumer<Merged, Throwable> exceptionConsumer
     ) {
         this.mappings.put(cls, new MergedHandlerMappingImpl<>(cls, priority, mapping, exceptionConsumer));
         return this;
     }
 
-    
     @Override
     public MergedHandlerList<Event, Handled> handlers() {
         if (this.mappings.isEmpty()) {

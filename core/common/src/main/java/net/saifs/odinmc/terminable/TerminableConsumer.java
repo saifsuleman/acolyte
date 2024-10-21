@@ -33,7 +33,6 @@ import net.saifs.odinmc.terminable.module.TerminableModule;
  */
 @FunctionalInterface
 public interface TerminableConsumer {
-
     /**
      * Binds with the given terminable.
      *
@@ -54,5 +53,4 @@ public interface TerminableConsumer {
         module.setup(this);
         return module;
     }
-
 }

@@ -1,30 +1,31 @@
 package net.saifs.odinmc.events;
 
-import net.saifs.odinmc.definitions.Self;
-
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import net.saifs.odinmc.definitions.Self;
 
-public interface SubscriptionBuilder<Event, Sb extends Subscription, HandlerList extends FunctionalHandlerList<Event, Sb, HandlerList>, Slf extends SubscriptionBuilder<Event, Sb, HandlerList, Slf>> extends Self<Slf> {
-
+public interface SubscriptionBuilder<
+    Event,
+    Sb extends Subscription,
+    HandlerList extends FunctionalHandlerList<Event, Sb, HandlerList>,
+    Slf extends SubscriptionBuilder<Event, Sb, HandlerList, Slf>
+>
+    extends Self<Slf> {
     default HandlerList biConsumer(final BiConsumer<Sb, Event> handler) {
         return this.handlers().biConsumer(handler);
     }
-
 
     default Sb biHandler(final BiConsumer<Sb, Event> handler) {
         return this.biConsumer(handler).register();
     }
 
-
     default HandlerList consumer(final Consumer<Event> handler) {
         return this.handlers().consumer(handler);
     }
-
 
     default Slf expireAfter(final Duration duration) {
         final var dur = duration.toNanos();
@@ -35,11 +36,9 @@ public interface SubscriptionBuilder<Event, Sb extends Subscription, HandlerList
         return this.expireIf((__, ___) -> System.nanoTime() > expiry, ExpiryTestStage.PRE);
     }
 
-
     default Slf expireAfter(final long duration, final TimeUnit unit) {
         return this.expireAfter(Duration.of(duration, unit.toChronoUnit()));
     }
-
 
     default Slf expireAfter(final long maxCalls) {
         if (maxCalls < 1) {
@@ -48,32 +47,25 @@ public interface SubscriptionBuilder<Event, Sb extends Subscription, HandlerList
         return this.expireIf((handler, event) -> handler.callCounter() >= maxCalls, ExpiryTestStage.PRE, ExpiryTestStage.POST_HANDLE);
     }
 
-
     default Slf expireIf(final Predicate<Event> predicate) {
         return this.expireIf((__, e) -> predicate.test(e), ExpiryTestStage.PRE, ExpiryTestStage.POST_HANDLE);
     }
 
-
     Slf expireIf(BiPredicate<Sb, Event> predicate, ExpiryTestStage... testPoints);
 
-
     Slf filter(Predicate<Event> predicate);
-
 
     default Slf filterNot(final Predicate<Event> predicate) {
         return this.filter(Predicate.not(predicate));
     }
 
-
     default Sb handler(final Consumer<Event> handler) {
         return this.biHandler((__, e) -> handler.accept(e));
     }
 
-
     default Sb handler(final Runnable handler) {
         return this.handler(__ -> handler.run());
     }
-
 
     HandlerList handlers();
 
@@ -84,7 +76,14 @@ public interface SubscriptionBuilder<Event, Sb extends Subscription, HandlerList
         BiPredicate<Sb, Event> preExpiryTest();
     }
 
-    abstract class Base<Event, Sb extends Subscription, HandlerList extends FunctionalHandlerList<Event, Sb, HandlerList>, Slf extends SubscriptionBuilder<Event, Sb, HandlerList, Slf>> implements SubscriptionBuilder<Event, Sb, HandlerList, Slf>, Get<Event, Sb> {
+    abstract class Base<
+        Event,
+        Sb extends Subscription,
+        HandlerList extends FunctionalHandlerList<Event, Sb, HandlerList>,
+        Slf extends SubscriptionBuilder<Event, Sb, HandlerList, Slf>
+    >
+        implements SubscriptionBuilder<Event, Sb, HandlerList, Slf>, Get<Event, Sb> {
+
         private Predicate<Event> filter = __ -> true;
         private BiPredicate<Sb, Event> midExpiryTest = (__, ___) -> false;
         private BiPredicate<Sb, Event> postExpiryTest = (__, ___) -> false;
@@ -121,7 +120,6 @@ public interface SubscriptionBuilder<Event, Sb extends Subscription, HandlerList
             }
             return this.self();
         }
-
 
         @Override
         public final Slf filter(final Predicate<Event> predicate) {

@@ -80,5 +80,4 @@ public interface Terminable extends AutoCloseable {
     default void bindWith(TerminableConsumer consumer) {
         consumer.bind(this);
     }
-
 }

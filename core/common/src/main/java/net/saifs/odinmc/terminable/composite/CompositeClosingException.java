@@ -33,6 +33,7 @@ import java.util.List;
  * {@link CompositeTerminable#close()}.
  */
 public class CompositeClosingException extends Exception {
+
     private final List<? extends Throwable> causes;
 
     public CompositeClosingException(List<? extends Throwable> causes) {
@@ -53,5 +54,4 @@ public class CompositeClosingException extends Exception {
             cause.printStackTrace();
         }
     }
-
 }

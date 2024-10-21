@@ -25,21 +25,19 @@
 
 package net.saifs.odinmc.terminable.composite;
 
-import net.saifs.odinmc.terminable.Terminable;
-
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import net.saifs.odinmc.terminable.Terminable;
 
 public class AbstractCompositeTerminable implements CompositeTerminable {
+
     private final Deque<AutoCloseable> closeables = new ConcurrentLinkedDeque<>();
     private boolean closed = false;
 
-    protected AbstractCompositeTerminable() {
-
-    }
+    protected AbstractCompositeTerminable() {}
 
     @Override
     public CompositeTerminable with(AutoCloseable autoCloseable) {
@@ -51,7 +49,7 @@ public class AbstractCompositeTerminable implements CompositeTerminable {
     @Override
     public void close() throws CompositeClosingException {
         List<Exception> caught = new ArrayList<>();
-        for (AutoCloseable ac; (ac = this.closeables.poll()) != null; ) {
+        for (AutoCloseable ac; (ac = this.closeables.poll()) != null;) {
             try {
                 ac.close();
             } catch (Exception e) {
@@ -73,13 +71,13 @@ public class AbstractCompositeTerminable implements CompositeTerminable {
     @Override
     public void cleanup() {
         this.closeables.removeIf(ac -> {
-            if (!(ac instanceof Terminable)) {
-                return false;
-            }
-            if (ac instanceof CompositeTerminable) {
-                ((CompositeTerminable) ac).cleanup();
-            }
-            return ((Terminable) ac).isClosed();
-        });
+                if (!(ac instanceof Terminable)) {
+                    return false;
+                }
+                if (ac instanceof CompositeTerminable) {
+                    ((CompositeTerminable) ac).cleanup();
+                }
+                return ((Terminable) ac).isClosed();
+            });
     }
 }

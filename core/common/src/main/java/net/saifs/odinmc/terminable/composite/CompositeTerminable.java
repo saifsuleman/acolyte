@@ -37,7 +37,6 @@ import net.saifs.odinmc.terminable.TerminableConsumer;
  * cleared on each invocation of {@link #close()}.</p>
  */
 public interface CompositeTerminable extends Terminable, TerminableConsumer {
-
     /**
      * Creates a new standalone {@link CompositeTerminable}.
      *
@@ -154,5 +153,4 @@ public interface CompositeTerminable extends Terminable, TerminableConsumer {
      * Removes instances which have already been terminated.
      */
     void cleanup();
-
 }

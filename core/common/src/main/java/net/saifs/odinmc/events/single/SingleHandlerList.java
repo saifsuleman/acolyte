@@ -4,8 +4,7 @@ import net.saifs.odinmc.events.FunctionalHandlerList;
 import net.saifs.odinmc.events.Subscription;
 
 public interface SingleHandlerList<Event> extends FunctionalHandlerList<Event, Subscription, SingleHandlerList<Event>> {
-    
-    static <Event, Priority> SingleHandlerList<Event> simple( final SingleSubscriptionBuilder.Get<Event, Priority> getter) {
+    static <Event, Priority> SingleHandlerList<Event> simple(final SingleSubscriptionBuilder.Get<Event, Priority> getter) {
         return new SingleHandlerListImpl<>(getter);
     }
 

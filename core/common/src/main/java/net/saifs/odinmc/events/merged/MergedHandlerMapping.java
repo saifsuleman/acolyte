@@ -1,12 +1,9 @@
 package net.saifs.odinmc.events.merged;
 
-
 public interface MergedHandlerMapping<Merged, Priority, Handled> {
-    void failed( Merged event,  Throwable error);
+    void failed(Merged event, Throwable error);
 
-    
-    Handled map( Object object);
+    Handled map(Object object);
 
-    
     Priority priority();
 }

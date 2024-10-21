@@ -33,7 +33,6 @@ import net.saifs.odinmc.terminable.TerminableConsumer;
  * of {@link Terminable}s.
  */
 public interface TerminableModule {
-
     /**
      * Performs the tasks to setup this module
      *
@@ -49,5 +48,4 @@ public interface TerminableModule {
     default void bindModuleWith(TerminableConsumer consumer) {
         consumer.bindModule(this);
     }
-
 }

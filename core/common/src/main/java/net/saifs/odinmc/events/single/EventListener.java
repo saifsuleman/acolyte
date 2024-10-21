@@ -21,29 +21,23 @@ final class EventListener<Event, Priority> implements EventExecutor<Event>, Subs
 
     private final BiConsumer<Event, Throwable> exceptionConsumer;
 
-    
     private final Predicate<Event> filter;
 
     private final boolean handleSubclasses;
 
-    
     private final BiConsumer<Subscription, Event> handler;
 
-    
     private final BiPredicate<Subscription, Event> midExpiryTest;
 
     private final AtomicReference<Object> nativeExecutor = new AtomicReference<>();
 
-    
     private final BiPredicate<Subscription, Event> postExpiryTest;
 
-    
     private final BiPredicate<Subscription, Event> preExpiryTest;
 
-    
     private final Priority priority;
 
-    EventListener( final SingleSubscriptionBuilder.Get<Event, Priority> getter,  final BiConsumer<Subscription, Event> handler) {
+    EventListener(final SingleSubscriptionBuilder.Get<Event, Priority> getter, final BiConsumer<Subscription, Event> handler) {
         this.eventClass = getter.eventClass();
         this.priority = getter.priority();
         this.exceptionConsumer = getter.exceptionConsumer();
@@ -83,7 +77,7 @@ final class EventListener<Event, Priority> implements EventExecutor<Event>, Subs
     }
 
     @Override
-    public void execute( final Event event) {
+    public void execute(final Event event) {
         if (this.handleSubclasses) {
             if (!this.eventClass.isInstance(event)) {
                 return;
@@ -121,18 +115,16 @@ final class EventListener<Event, Priority> implements EventExecutor<Event>, Subs
         }
     }
 
-    
     @Override
     public Object nativeExecutor() {
         return Objects.requireNonNull(this.nativeExecutor.get(), "native executor");
     }
 
     @Override
-    public void nativeExecutor( final Object nativeExecutor) {
+    public void nativeExecutor(final Object nativeExecutor) {
         this.nativeExecutor.set(nativeExecutor);
     }
 
-    
     Subscription register() {
         Plugins.manager().register(this.eventClass, this.priority, this);
         return this;

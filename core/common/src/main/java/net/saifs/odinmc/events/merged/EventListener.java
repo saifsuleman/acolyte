@@ -23,31 +23,21 @@ final class EventListener<Event, Priority, Handled> implements Subscription {
 
     private final AtomicLong callCount = new AtomicLong();
 
-    
     private final Predicate<Handled> filter;
 
-    
     private final BiConsumer<Subscription, Handled> handler;
 
-    
     private final Map<Class<? extends Event>, MergedHandlerMapping<? extends Event, Priority, Handled>> mappings;
 
-    
     private final BiPredicate<Subscription, Handled> midExpiryTest;
 
-    
     private final BiPredicate<Subscription, Handled> postExpiryTest;
 
-    
     private final BiPredicate<Subscription, Handled> preExpiryTest;
 
-    
     private final Collection<EventExecutor<?>> registeredEvents = ConcurrentHashMap.newKeySet();
 
-    EventListener(
-         final MergedSubscriptionBuilder.Get<Event, Priority, Handled> getter,
-         final BiConsumer<Subscription, Handled> handler
-    ) {
+    EventListener(final MergedSubscriptionBuilder.Get<Event, Priority, Handled> getter, final BiConsumer<Subscription, Handled> handler) {
         this.mappings = Collections.unmodifiableMap(getter.mappings());
         this.filter = getter.filter();
         this.preExpiryTest = getter.preExpiryTest();
@@ -101,23 +91,21 @@ final class EventListener<Event, Priority, Handled> implements Subscription {
 
     private final class Executor implements EventExecutor<Event> {
 
-        
         private final Class<Event> eventClass;
 
         private final AtomicReference<Object> nativeExecutor = new AtomicReference<>();
 
-        Executor( final Class<Event> eventClass) {
+        Executor(final Class<Event> eventClass) {
             this.eventClass = eventClass;
         }
 
-        
         @Override
         public Class<? extends Event> eventClass() {
             return this.eventClass;
         }
 
         @Override
-        public void execute( final Event event) {
+        public void execute(final Event event) {
             final var mapping = (MergedHandlerMapping<Event, Priority, Handled>) EventListener.this.mappings.get(event.getClass());
             if (mapping == null) {
                 return;
@@ -152,14 +140,13 @@ final class EventListener<Event, Priority, Handled> implements Subscription {
             }
         }
 
-        
         @Override
         public Object nativeExecutor() {
             return Objects.requireNonNull(this.nativeExecutor.get(), "native executor");
         }
 
         @Override
-        public void nativeExecutor( final Object nativeExecutor) {
+        public void nativeExecutor(final Object nativeExecutor) {
             this.nativeExecutor.set(nativeExecutor);
         }
     }
