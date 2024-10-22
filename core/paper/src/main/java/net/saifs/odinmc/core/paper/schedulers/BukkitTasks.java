@@ -3,7 +3,6 @@ package net.saifs.odinmc.core.paper.schedulers;
 import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import lombok.experimental.UtilityClass;
 import net.odinmc.core.common.scheduling.Internal;
 import net.odinmc.core.common.scheduling.Scheduler;
 import net.odinmc.core.common.scheduling.SchedulerProvider;
@@ -12,24 +11,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
-public class BukkitTasks {
+public final class BukkitTasks {
 
-    private final Scheduler ASYNC_SCHEDULER = new BukkitAsyncScheduler();
+    private static final Scheduler ASYNC_SCHEDULER = new BukkitAsyncScheduler();
 
-    private final AtomicReference<Plugin> PLUGIN = new AtomicReference<>();
+    private static final AtomicReference<Plugin> PLUGIN = new AtomicReference<>();
 
-    private final Scheduler SYNC_SCHEDULER = new BukkitSyncScheduler();
+    private static final Scheduler SYNC_SCHEDULER = new BukkitSyncScheduler();
+
+    private BukkitTasks() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     @NotNull
-    public Terminable init(@NotNull final Plugin plugin) {
+    public static Terminable init(@NotNull final Plugin plugin) {
         Preconditions.checkState(Bukkit.getServer().isPrimaryThread(), "Please use #init(Plugin) method in a main thread!");
         BukkitTasks.PLUGIN.set(plugin);
         return Internal.init(SchedulerProvider.of(BukkitTasks.ASYNC_SCHEDULER, BukkitTasks.SYNC_SCHEDULER), new BukkitLogger());
     }
 
     @NotNull
-    Plugin plugin() {
+    static Plugin plugin() {
         return Objects.requireNonNull(BukkitTasks.PLUGIN.get(), "init task first!");
     }
 }

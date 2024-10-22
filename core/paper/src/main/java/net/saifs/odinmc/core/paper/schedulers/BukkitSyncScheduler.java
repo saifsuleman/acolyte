@@ -2,22 +2,16 @@ package net.saifs.odinmc.core.paper.schedulers;
 
 import java.time.Duration;
 import java.util.function.Predicate;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import net.odinmc.core.common.delegates.RunnableToSupplier;
-import net.odinmc.core.common.scheduling.Internal;
-import net.odinmc.core.common.scheduling.Promise;
-import net.odinmc.core.common.scheduling.PromiseSupply;
-import net.odinmc.core.common.scheduling.Scheduler;
-import net.odinmc.core.common.scheduling.Schedulers;
-import net.odinmc.core.common.scheduling.Task;
-import net.odinmc.core.common.scheduling.ThreadContext;
+import net.odinmc.core.common.scheduling.*;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-@Log4j2
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 final class BukkitSyncScheduler implements Scheduler {
+
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BukkitSyncScheduler.class);
+
+    BukkitSyncScheduler() {}
 
     @NotNull
     @Override

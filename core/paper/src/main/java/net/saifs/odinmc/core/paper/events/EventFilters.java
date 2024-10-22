@@ -40,47 +40,47 @@ public class EventFilters {
     private static final Predicate<? extends Cancellable> IGNORE_UNCANCELLED = Cancellable::isCancelled;
 
     @NotNull
-    public <T extends Cancellable> Predicate<T> ignoreCancelled() {
+    public static <T extends Cancellable> Predicate<T> ignoreCancelled() {
         return (Predicate<T>) EventFilters.IGNORE_CANCELLED;
     }
 
     @NotNull
-    public <T extends Event> Predicate<T> ignoreCancelledSoft() {
+    public static <T extends Event> Predicate<T> ignoreCancelledSoft() {
         return (Predicate<T>) EventFilters.IGNORE_CANCELLED_SOFT;
     }
 
     @NotNull
-    public <T extends PlayerLoginEvent> Predicate<T> ignoreDisallowedLogin() {
+    public static <T extends PlayerLoginEvent> Predicate<T> ignoreDisallowedLogin() {
         return (Predicate<T>) EventFilters.IGNORE_DISALLOWED_LOGIN;
     }
 
     @NotNull
-    public <T extends AsyncPlayerPreLoginEvent> Predicate<T> ignoreDisallowedPreLogin() {
+    public static <T extends AsyncPlayerPreLoginEvent> Predicate<T> ignoreDisallowedPreLogin() {
         return (Predicate<T>) EventFilters.IGNORE_DISALLOWED_PRE_LOGIN;
     }
 
     @NotNull
-    public <T extends Cancellable> Predicate<T> ignoreNotCancelled() {
+    public static <T extends Cancellable> Predicate<T> ignoreNotCancelled() {
         return (Predicate<T>) EventFilters.IGNORE_UNCANCELLED;
     }
 
     @NotNull
-    public <T extends PlayerMoveEvent> Predicate<T> ignoreSameBlock() {
+    public static <T extends PlayerMoveEvent> Predicate<T> ignoreSameBlock() {
         return (Predicate<T>) EventFilters.IGNORE_SAME_BLOCK;
     }
 
     @NotNull
-    public <T extends PlayerMoveEvent> Predicate<T> ignoreSameBlockAndY() {
+    public static <T extends PlayerMoveEvent> Predicate<T> ignoreSameBlockAndY() {
         return (Predicate<T>) EventFilters.IGNORE_SAME_BLOCK_AND_Y;
     }
 
     @NotNull
-    public <T extends PlayerMoveEvent> Predicate<T> ignoreSameChunk() {
+    public static <T extends PlayerMoveEvent> Predicate<T> ignoreSameChunk() {
         return (Predicate<T>) EventFilters.IGNORE_SAME_CHUNK;
     }
 
     @NotNull
-    public <T extends PlayerEvent> Predicate<T> playerHasPermission(@NotNull final String permission) {
+    public static <T extends PlayerEvent> Predicate<T> playerHasPermission(@NotNull final String permission) {
         return e -> e.getPlayer().hasPermission(permission);
     }
 }

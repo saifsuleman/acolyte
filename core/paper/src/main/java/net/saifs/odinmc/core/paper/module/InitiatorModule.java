@@ -7,6 +7,7 @@ import net.odinmc.core.common.terminable.module.TerminableModule;
 import net.saifs.odinmc.core.paper.events.PaperEventManager;
 import net.saifs.odinmc.core.paper.plugin.PaperCorePlugin;
 import net.saifs.odinmc.core.paper.schedulers.BukkitTasks;
+import net.saifs.odinmc.core.paper.store.AsyncPlayerStore;
 
 public class InitiatorModule implements TerminableModule {
 
@@ -15,5 +16,6 @@ public class InitiatorModule implements TerminableModule {
         var plugin = Services.load(PaperCorePlugin.class);
         BukkitTasks.init(plugin).bindWith(consumer);
         Plugins.init(plugin, new PaperEventManager());
+        Services.getOrProvide(AsyncPlayerStore.class).bindModuleWith(consumer);
     }
 }
