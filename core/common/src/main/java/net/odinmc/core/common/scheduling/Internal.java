@@ -1,12 +1,11 @@
 package net.odinmc.core.common.scheduling;
 
-import net.odinmc.core.common.terminable.Terminable;
-import org.jetbrains.annotations.NotNull;
-
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import net.odinmc.core.common.terminable.Terminable;
+import org.jetbrains.annotations.NotNull;
 
 public final class Internal {
 

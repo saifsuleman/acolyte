@@ -1,10 +1,9 @@
 package net.odinmc.core.common.scheduling;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.NotNull;
 
 public interface InternalTask extends Task, Runnable {
     @NotNull

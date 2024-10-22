@@ -1,8 +1,7 @@
 package net.odinmc.core.common.scheduling;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
 
 public interface ContextualTaskBuilder {
     @NotNull

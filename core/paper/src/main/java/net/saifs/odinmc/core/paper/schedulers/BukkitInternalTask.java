@@ -6,9 +6,9 @@ import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.bukkit.scheduler.BukkitRunnable;
 import net.odinmc.core.common.scheduling.InternalTask;
 import net.odinmc.core.common.scheduling.Task;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @Getter

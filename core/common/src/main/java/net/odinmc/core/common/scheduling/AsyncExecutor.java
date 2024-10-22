@@ -1,16 +1,15 @@
 package net.odinmc.core.common.scheduling;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
+import org.jetbrains.annotations.NotNull;
 
 public final class AsyncExecutor extends AbstractExecutorService implements ScheduledExecutorService {
 
@@ -64,30 +63,29 @@ public final class AsyncExecutor extends AbstractExecutorService implements Sche
     @NotNull
     @Override
     public ScheduledFuture<?> scheduleAtFixedRate(
-            @NotNull final Runnable command,
-            final long initialDelay,
-            final long period,
-            @NotNull final TimeUnit unit
+        @NotNull final Runnable command,
+        final long initialDelay,
+        final long period,
+        @NotNull final TimeUnit unit
     ) {
         return this.consumeTask(
                 this.timerExecutionService.scheduleAtFixedRate(new FixedRateWorker(new UncheckedRunnable(command), this), initialDelay, period, unit)
-        );
+            );
     }
 
     @NotNull
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(
-            @NotNull final Runnable command,
-            final long initialDelay,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final Runnable command,
+        final long initialDelay,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.scheduleAtFixedRate(command, initialDelay, delay, unit);
     }
 
     @Override
-    public void shutdown() {
-    }
+    public void shutdown() {}
 
     @NotNull
     @Override
@@ -152,14 +150,14 @@ public final class AsyncExecutor extends AbstractExecutorService implements Sche
                 return;
             }
             this.executor.executorService.execute(() -> {
-                this.lock.lock();
-                try {
-                    this.delegate.run();
-                } finally {
-                    this.lock.unlock();
-                    this.running.decrementAndGet();
-                }
-            });
+                    this.lock.lock();
+                    try {
+                        this.delegate.run();
+                    } finally {
+                        this.lock.unlock();
+                        this.running.decrementAndGet();
+                    }
+                });
         }
     }
 }

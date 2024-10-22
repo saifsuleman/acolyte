@@ -9,6 +9,7 @@ import net.saifs.odinmc.core.paper.plugin.PaperCorePlugin;
 import net.saifs.odinmc.core.paper.schedulers.BukkitTasks;
 
 public class InitiatorModule implements TerminableModule {
+
     @Override
     public void setup(TerminableConsumer consumer) {
         var plugin = Services.load(PaperCorePlugin.class);

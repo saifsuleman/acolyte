@@ -1,9 +1,8 @@
 package net.odinmc.core.common.scheduling;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.NotNull;
 
 public interface ContextualPromiseBuilder {
     @NotNull

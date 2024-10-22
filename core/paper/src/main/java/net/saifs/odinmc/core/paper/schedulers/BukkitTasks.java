@@ -4,12 +4,12 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.experimental.UtilityClass;
-import net.odinmc.core.common.terminable.Terminable;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import net.odinmc.core.common.scheduling.Internal;
 import net.odinmc.core.common.scheduling.Scheduler;
 import net.odinmc.core.common.scheduling.SchedulerProvider;
+import net.odinmc.core.common.terminable.Terminable;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass

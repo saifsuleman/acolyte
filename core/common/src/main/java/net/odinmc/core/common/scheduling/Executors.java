@@ -1,11 +1,9 @@
 package net.odinmc.core.common.scheduling;
 
+import java.time.Duration;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
-
-final
-class Executors {
+final class Executors {
 
     private Executors() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

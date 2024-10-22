@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({"unchecked", "resource", "unused"})
+@SuppressWarnings({ "unchecked", "resource", "unused" })
 public interface Promise<V> extends Future<V>, Terminable {
     @NotNull
     static Promise<?> allOf(@NotNull final Promise<?>... promises) {
@@ -83,10 +83,10 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     static <U> Promise<U> supplyingDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Supplier<U> supplier,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Supplier<U> supplier,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return Promise.supplyingDelayed(context, supplier, Internal.durationFrom(delay, unit));
     }
@@ -138,28 +138,28 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     static <U> Promise<U> supplyingExceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Callable<U> callable,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final Callable<U> callable,
+        final long delayTicks
     ) {
         return Promise.supplyingExceptionallyDelayed(context, callable, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     static <U> Promise<U> supplyingExceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Callable<U> callable,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Callable<U> callable,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return Promise.supplyingExceptionallyDelayed(context, callable, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     static <U> Promise<U> supplyingExceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Callable<U> callable,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Callable<U> callable,
+        @NotNull final Duration delay
     ) {
         return Promise.<U>empty().supplyExceptionallyDelayed(context, callable, delay);
     }
@@ -225,26 +225,26 @@ public interface Promise<V> extends Future<V>, Terminable {
     static <U> Promise<U> wrapFutureAsync(@NotNull final Supplier<Future<U>> supplier) {
         final var promise = Promise.<U>empty();
         Schedulers
-                .async()
-                .run(() -> {
-                    final var future = supplier.get();
-                    if (future instanceof CompletionStage<?>) {
-                        final var completableFuture = ((CompletionStage<U>) future).toCompletableFuture();
-                        try {
-                            promise.complete(completableFuture.join());
-                        } catch (final Throwable e) {
-                            promise.completeExceptionally(e);
-                        }
-                    } else if (future.isDone()) {
-                        try {
-                            promise.complete(future.get());
-                        } catch (final Throwable e) {
-                            promise.completeExceptionally(e);
-                        }
-                    } else {
-                        promise.supplyExceptionallyAsync(future::get);
+            .async()
+            .run(() -> {
+                final var future = supplier.get();
+                if (future instanceof CompletionStage<?>) {
+                    final var completableFuture = ((CompletionStage<U>) future).toCompletableFuture();
+                    try {
+                        promise.complete(completableFuture.join());
+                    } catch (final Throwable e) {
+                        promise.completeExceptionally(e);
                     }
-                });
+                } else if (future.isDone()) {
+                    try {
+                        promise.complete(future.get());
+                    } catch (final Throwable e) {
+                        promise.completeExceptionally(e);
+                    }
+                } else {
+                    promise.supplyExceptionallyAsync(future::get);
+                }
+            });
         return promise;
     }
 
@@ -302,28 +302,28 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> exceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<Throwable, ? extends V> function,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final Function<Throwable, ? extends V> function,
+        final long delayTicks
     ) {
         return this.exceptionallyDelayed(context, function, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     default Promise<V> exceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<Throwable, ? extends V> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Function<Throwable, ? extends V> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.exceptionallyDelayed(context, function, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default Promise<V> exceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<Throwable, ? extends V> function,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Function<Throwable, ? extends V> function,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.exceptionallyDelayedSync(function, delay);
@@ -338,9 +338,9 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> exceptionallyDelayedAsync(
-            @NotNull final Function<Throwable, ? extends V> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final Function<Throwable, ? extends V> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.exceptionallyDelayedAsync(function, Internal.durationFrom(delay, unit));
     }
@@ -357,9 +357,9 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> exceptionallyDelayedSync(
-            @NotNull final Function<Throwable, ? extends V> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final Function<Throwable, ? extends V> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.exceptionallyDelayedSync(function, Internal.durationFrom(delay, unit));
     }
@@ -396,33 +396,33 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.async(new PromiseHandle<>(p, function, v, null)),
                 (p, t) -> Executors.async(new PromiseHandle<>(p, function, null, t))
-        );
+            );
     }
 
     @NotNull
     default <U> Promise<U> handleDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiFunction<V, Throwable, U> function,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final BiFunction<V, Throwable, U> function,
+        final long delayTicks
     ) {
         return this.handleDelayed(context, function, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     default <U> Promise<U> handleDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiFunction<V, Throwable, U> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final BiFunction<V, Throwable, U> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.handleDelayed(context, function, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default <U> Promise<U> handleDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiFunction<V, Throwable, U> function,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final BiFunction<V, Throwable, U> function,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.handleDelayedSync(function, delay);
@@ -445,7 +445,7 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.asyncDelayed(new PromiseHandle<>(p, function, v, null), delay),
                 (p, t) -> Executors.asyncDelayed(new PromiseHandle<>(p, function, null, t), delay)
-        );
+            );
     }
 
     @NotNull
@@ -463,7 +463,7 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.syncDelayed(new PromiseHandle<>(p, function, v, null), delay),
                 (p, t) -> Executors.syncDelayed(new PromiseHandle<>(p, function, null, t), delay)
-        );
+            );
     }
 
     @NotNull
@@ -471,7 +471,7 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.sync(new PromiseHandle<>(p, function, v, null)),
                 (p, t) -> Executors.sync(new PromiseHandle<>(p, function, null, t))
-        );
+            );
     }
 
     @Override
@@ -519,19 +519,19 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> onErrorDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Consumer<Throwable> consumer,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Consumer<Throwable> consumer,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.onErrorDelayed(context, consumer, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default Promise<V> onErrorDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Consumer<Throwable> consumer,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Consumer<Throwable> consumer,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.onErrorDelayedSync(consumer, delay);
@@ -606,10 +606,10 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> supplyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Supplier<V> supplier,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Supplier<V> supplier,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.supplyDelayed(context, supplier, Internal.durationFrom(delay, unit));
     }
@@ -669,19 +669,19 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> supplyExceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Callable<V> callable,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Callable<V> callable,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.supplyExceptionallyDelayed(context, callable, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default Promise<V> supplyExceptionallyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Callable<V> callable,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Callable<V> callable,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.supplyExceptionallyDelayedSync(callable, delay);
@@ -732,9 +732,9 @@ public interface Promise<V> extends Future<V>, Terminable {
     @NotNull
     default Promise<?> thenAcceptAsync(@NotNull final Consumer<V> action) {
         return this.thenApplyAsync(v -> {
-            action.accept(v);
-            return null;
-        });
+                action.accept(v);
+                return null;
+            });
     }
 
     @NotNull
@@ -744,10 +744,10 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<?> thenAcceptDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Consumer<V> action,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Consumer<V> action,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenAcceptDelayed(context, action, Internal.durationFrom(delay, unit));
     }
@@ -810,28 +810,28 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default <U> Promise<U> thenApplyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends U> function,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends U> function,
+        final long delayTicks
     ) {
         return this.thenApplyDelayed(context, function, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     default <U> Promise<U> thenApplyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends U> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends U> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenApplyDelayed(context, function, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default <U> Promise<U> thenApplyDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends U> function,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends U> function,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.thenApplyDelayedSync(function, delay);
@@ -894,9 +894,9 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default <U> Promise<U> thenComposeDelayedAsync(
-            @NotNull final Function<V, ? extends Promise<U>> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final Function<V, ? extends Promise<U>> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenComposeDelayedAsync(function, Internal.durationFrom(delay, unit));
     }
@@ -908,28 +908,28 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default <U> Promise<U> thenComposeDelayedSync(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends Promise<U>> function,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends Promise<U>> function,
+        final long delayTicks
     ) {
         return this.thenComposeDelayedSync(context, function, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     default <U> Promise<U> thenComposeDelayedSync(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends Promise<U>> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends Promise<U>> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenComposeDelayedSync(context, function, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default <U> Promise<U> thenComposeDelayedSync(
-            @NotNull final ThreadContext context,
-            @NotNull final Function<V, ? extends Promise<U>> function,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final Function<V, ? extends Promise<U>> function,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.thenComposeDelayedSync(function, delay);
@@ -944,9 +944,9 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default <U> Promise<U> thenComposeDelayedSync(
-            @NotNull final Function<V, ? extends Promise<U>> function,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final Function<V, ? extends Promise<U>> function,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenComposeDelayedSync(function, Internal.durationFrom(delay, unit));
     }
@@ -981,10 +981,10 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<V> thenFilterDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Predicate<V> filter,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Predicate<V> filter,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenFilterDelayed(context, filter, Internal.durationFrom(delay, unit));
     }
@@ -1052,10 +1052,10 @@ public interface Promise<V> extends Future<V>, Terminable {
 
     @NotNull
     default Promise<?> thenRunDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final Runnable action,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final Runnable action,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.thenRunDelayed(context, action, Internal.durationFrom(delay, unit));
     }
@@ -1132,33 +1132,33 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.async(new PromiseWhenComplete<>(p, action, v, null)),
                 (p, t) -> Executors.async(new PromiseOnError<>(p, e -> action.accept(null, e), t))
-        );
+            );
     }
 
     @NotNull
     default Promise<V> whenCompleteDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiConsumer<V, Throwable> action,
-            final long delayTicks
+        @NotNull final ThreadContext context,
+        @NotNull final BiConsumer<V, Throwable> action,
+        final long delayTicks
     ) {
         return this.whenCompleteDelayed(context, action, Internal.durationFrom(delayTicks));
     }
 
     @NotNull
     default Promise<V> whenCompleteDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiConsumer<V, Throwable> action,
-            final long delay,
-            @NotNull final TimeUnit unit
+        @NotNull final ThreadContext context,
+        @NotNull final BiConsumer<V, Throwable> action,
+        final long delay,
+        @NotNull final TimeUnit unit
     ) {
         return this.whenCompleteDelayed(context, action, Internal.durationFrom(delay, unit));
     }
 
     @NotNull
     default Promise<V> whenCompleteDelayed(
-            @NotNull final ThreadContext context,
-            @NotNull final BiConsumer<V, Throwable> action,
-            @NotNull final Duration delay
+        @NotNull final ThreadContext context,
+        @NotNull final BiConsumer<V, Throwable> action,
+        @NotNull final Duration delay
     ) {
         return switch (context) {
             case SYNC -> this.whenCompleteDelayedSync(action, delay);
@@ -1181,7 +1181,7 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.asyncDelayed(new PromiseWhenComplete<>(p, action, v, null), delay),
                 (p, t) -> Executors.asyncDelayed(new PromiseOnError<>(p, e -> action.accept(null, e), t), delay)
-        );
+            );
     }
 
     @NotNull
@@ -1199,7 +1199,7 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.syncDelayed(new PromiseWhenComplete<>(p, action, v, null), delay),
                 (p, t) -> Executors.syncDelayed(new PromiseOnError<>(p, e -> action.accept(null, e), t), delay)
-        );
+            );
     }
 
     @NotNull
@@ -1207,23 +1207,23 @@ public interface Promise<V> extends Future<V>, Terminable {
         return this.whenComplete(
                 (p, v) -> Executors.sync(new PromiseWhenComplete<>(p, action, v, null)),
                 (p, t) -> Executors.sync(new PromiseOnError<>(p, e -> action.accept(null, e), t))
-        );
+            );
     }
 
     @NotNull
     private <U> Promise<U> whenComplete(
-            @NotNull final BiConsumer<Promise<U>, V> onSuccess,
-            @NotNull final BiConsumer<Promise<U>, Throwable> onError
+        @NotNull final BiConsumer<Promise<U>, V> onSuccess,
+        @NotNull final BiConsumer<Promise<U>, Throwable> onError
     ) {
         final var promise = Promise.<U>empty().setParent(this);
         this.future()
-                .whenComplete((v, t) -> {
-                    if (t == null) {
-                        onSuccess.accept(promise, v);
-                    } else {
-                        onError.accept(promise, t);
-                    }
-                });
+            .whenComplete((v, t) -> {
+                if (t == null) {
+                    onSuccess.accept(promise, v);
+                } else {
+                    onError.accept(promise, t);
+                }
+            });
         return promise;
     }
 
