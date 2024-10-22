@@ -1,5 +1,5 @@
 allprojects {
-    group = "net.saifs.odinmc"
+    group = "net.odinmc"
     version = "1.0-SNAPSHOT"
 
     repositories {
