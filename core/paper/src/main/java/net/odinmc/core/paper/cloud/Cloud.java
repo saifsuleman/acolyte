@@ -1,11 +1,19 @@
 package net.odinmc.core.paper.cloud;
 
 import com.google.common.reflect.TypeToken;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
+import io.papermc.paper.plugin.bootstrap.PluginBootstrapContextImpl;
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import lombok.SneakyThrows;
 import net.odinmc.core.common.services.Services;
+import net.odinmc.core.common.terminable.Terminable;
+import net.odinmc.core.common.util.ReflectionUtil;
 import net.odinmc.core.paper.plugin.ExtendedJavaPlugin;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
+import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.meta.CommandMeta;
@@ -16,45 +24,49 @@ import org.incendo.cloud.setting.ManagerSetting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Cloud {
-    TypeToken<PaperCommandManager<CommandSender>> TYPE = new TypeToken<>() {};
-    TypeToken<AnnotationParser<CommandSender>> ANNOTATION_PARSER = new TypeToken<>() {};
+public class Cloud implements Terminable {
+    private final PaperCommandManager<CommandSender> commandManager;
+    private final AnnotationParser<CommandSender> annotationParser;
+    private final CloudBootstrapHack hack;
 
-    static PaperCommandManager<CommandSender> get(Class<? extends ExtendedJavaPlugin> pluginClass) {
-        return Services.loadBound(Cloud.TYPE, pluginClass);
+    private Cloud(PaperCommandManager<CommandSender> commandManager, AnnotationParser<CommandSender> annotationParser, CloudBootstrapHack hack) {
+        this.commandManager = commandManager;
+        this.annotationParser = annotationParser;
+        this.hack = hack;
     }
 
-    static AnnotationParser<CommandSender> getAnnotationParser(Class<? extends ExtendedJavaPlugin> pluginClass) {
-        return Services.loadBound(Cloud.ANNOTATION_PARSER, pluginClass);
+    public void register(Object...instances) {
+        annotationParser.parse(instances);
+        hack.fire();
     }
 
-    @NotNull
-    static AnnotationParser<CommandSender> createAnnotationParser(@NotNull final Class<? extends ExtendedJavaPlugin> plugin) {
-        final var commandManager = Cloud.get(plugin);
-        return new AnnotationParser<>(commandManager, CommandSender.class, p -> CommandMeta.empty());
+    public void register() {
+        hack.fire();
     }
 
     @SneakyThrows
-    static PaperCommandManager<CommandSender> create(
-        @NotNull final ExtendedJavaPlugin plugin,
+    @SuppressWarnings("unchecked")
+    public static Cloud create(
         @NotNull final ExecutionCoordinator<CommandSender> coordinator
     ) {
-        final var manager = PaperCommandManager.builder(new CommandSenderMapper()).executionCoordinator(coordinator).buildOnEnable(plugin);
+        final var senderMapper = new CommandSenderMapper();
+        final var hack = new CloudBootstrapHack();
+        final var manager = PaperCommandManager.builder(senderMapper).executionCoordinator(coordinator).buildBootstrapped(hack.getContext());
         manager.settings().set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true);
         manager.settings().set(ManagerSetting.OVERRIDE_EXISTING_COMMANDS, true);
-        return manager;
+        var parser = new AnnotationParser<>(manager, CommandSender.class, p -> CommandMeta.empty());
+        return new Cloud(manager, parser, hack);
     }
 
-    static void registerBaseHelpCommand(
+    public void registerBaseHelpCommand(
         @NotNull final PaperCommandManager<CommandSender> commandManager,
         @NotNull final Command.Builder<CommandSender> builder,
         @NotNull final String command
     ) {
-        Cloud.registerBaseHelpCommand(commandManager, builder, command, null);
+        registerBaseHelpCommand(builder, command, null);
     }
 
-    static void registerBaseHelpCommand(
-        @NotNull final PaperCommandManager<CommandSender> commandManager,
+    public void registerBaseHelpCommand(
         @NotNull final Command.Builder<CommandSender> builder,
         @NotNull final String command,
         @Nullable final String permission
@@ -66,16 +78,14 @@ public interface Cloud {
         commandManager.command(permission == null ? help : help.permission(permission));
     }
 
-    static void registerHelpCommand(
-        @NotNull final PaperCommandManager<CommandSender> commandManager,
+    public void registerHelpCommand(
         @NotNull final Command.Builder<CommandSender> builder,
         @NotNull final String command
     ) {
-        Cloud.registerHelpCommand(commandManager, builder, command, null);
+        registerHelpCommand(builder, command, null);
     }
 
-    static void registerHelpCommand(
-        @NotNull final PaperCommandManager<CommandSender> commandManager,
+    public void registerHelpCommand(
         @NotNull final Command.Builder<CommandSender> builder,
         @NotNull final String command,
         @Nullable final String permission
@@ -86,5 +96,10 @@ public interface Cloud {
             .optional("query", StringParser.greedyStringParser())
             .handler(context -> helpHandler.queryCommands(context.getOrDefault("query", ""), context.sender()));
         commandManager.command(permission == null ? help : help.permission(permission));
+    }
+
+    @Override
+    public void close() {
+        commandManager.rootCommands().forEach(commandManager::deleteRootCommand);
     }
 }

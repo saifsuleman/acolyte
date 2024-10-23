@@ -23,16 +23,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public class ScoreboardModule implements TerminableModule {
-
     private final AsyncPlayerStore players = Services.load(AsyncPlayerStore.class);
     private final PaperScoreboard scoreboard = Services.load(PaperScoreboard.class);
-    private final Map<UUID, PaperScoreboardObjective> objectiveMap = new ConcurrentHashMap<>();
     private final ScoreboardConfig config = Services.load(ScoreboardConfig.class);
+    private final Map<UUID, PaperScoreboardObjective> objectiveMap = new ConcurrentHashMap<>();
 
     @Override
     public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerJoinEvent.class).handler(event -> Schedulers.async().run(() -> show(event.getPlayer()))).bindWith(consumer);
-
         Events.subscribe(PlayerQuitEvent.class).handler(event -> Schedulers.async().run(() -> hide(event.getPlayer()))).bindWith(consumer);
 
         for (var player : players) {
