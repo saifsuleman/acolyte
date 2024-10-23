@@ -14,8 +14,6 @@ pluginManagement {
 }
 
 rootProject.name = "odinmc"
-include("core")
-include("core:paper")
-findProject(":core:paper")?.name = "paper"
-include("core:common")
-findProject(":core:common")?.name = "common"
+include(":core:paper")
+include(":core:common")
+include(":essentials:paper")

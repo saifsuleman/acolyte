@@ -12,6 +12,8 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/paper" />
+            <option value="$PROJECT_DIR$/essentials" />
+            <option value="$PROJECT_DIR$/essentials/paper" />
           </set>
         </option>
       </GradleProjectSettings>

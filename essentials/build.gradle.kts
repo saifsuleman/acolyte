@@ -3,7 +3,7 @@ plugins {
 }
 
 subprojects {
-    group = "net.odinmc.core"
+    group = "net.odinmc.essentials"
     version = "1.0-SNAPSHOT"
 
     apply(plugin = "java")
