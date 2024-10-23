@@ -119,6 +119,14 @@ public interface Scheduler extends Executor {
     @NotNull
     Task runRepeatingCloseIf(@NotNull final Predicate<Task> taskPredicate, @NotNull final Duration delay, @NotNull final Duration interval);
 
+    default Task scheduleRepeating(@NotNull final Runnable task, final long intervalTicks) {
+        return this.scheduleRepeating(task, 0L, intervalTicks);
+    }
+
+    default Task scheduleRepeating(@NotNull final Runnable task, final Duration interval) {
+        return this.scheduleRepeating(task, Duration.ZERO, interval);
+    }
+
     @NotNull
     default Task scheduleRepeating(@NotNull final Runnable task, final long delayTicks, final long intervalTicks) {
         return this.scheduleRepeating(task, Internal.durationFrom(delayTicks), Internal.durationFrom(intervalTicks));

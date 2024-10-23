@@ -15,9 +15,10 @@ public class Services {
         Services.PROVIDER.set(provider);
     }
 
-    public static <S extends A, A> void provideApi(final S instance, final Class<A> apiClass) {
+    public static <S extends A, A> S provideApi(final S instance, final Class<A> apiClass) {
         Services.provide(apiClass, instance);
         Services.provide((Class<S>) instance.getClass(), instance);
+        return instance;
     }
 
     @NotNull

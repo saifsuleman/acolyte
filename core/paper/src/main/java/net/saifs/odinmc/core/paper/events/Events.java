@@ -2,6 +2,7 @@ package net.saifs.odinmc.core.paper.events;
 
 import net.odinmc.core.common.events.merged.MergedSubscriptionBuilder;
 import net.odinmc.core.common.events.single.SingleSubscriptionBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
@@ -42,5 +43,9 @@ public interface Events {
     @NotNull
     static <Handled extends Event> SingleSubscriptionBuilder<Handled> subscribe(@NotNull final Class<Handled> cls) {
         return Events.subscribe(cls, EventPriority.NORMAL);
+    }
+
+    static void dispatch(Event event) {
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

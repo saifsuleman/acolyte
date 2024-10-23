@@ -12,6 +12,8 @@ dependencies {
     api("com.google.guava:guava:32.0.0-android")
     api("com.github.ben-manes.caffeine:caffeine:3.1.8")
     api("org.jetbrains:annotations:23.0.0")
+    api("com.google.code.gson:gson:2.10.1")
+    api("org.spongepowered:configurate-gson:4.1.2")
 
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
