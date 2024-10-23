@@ -1,19 +1,16 @@
 package net.odinmc.core.common.config;
 
-import net.odinmc.core.common.services.Services;
-import net.odinmc.core.common.terminable.Terminable;
-import org.spongepowered.configurate.BasicConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.gson.GsonConfigurationLoader;
-import org.spongepowered.configurate.reference.ConfigurationReference;
-import org.spongepowered.configurate.reference.ValueReference;
-import org.spongepowered.configurate.reference.WatchServiceListener;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Provider;
+import net.odinmc.core.common.services.Services;
+import net.odinmc.core.common.terminable.Terminable;
+import org.spongepowered.configurate.BasicConfigurationNode;
+import org.spongepowered.configurate.gson.GsonConfigurationLoader;
+import org.spongepowered.configurate.reference.ConfigurationReference;
+import org.spongepowered.configurate.reference.ValueReference;
+import org.spongepowered.configurate.reference.WatchServiceListener;
 
 public class ConfigHandler<T> implements Terminable {
 
@@ -30,15 +27,18 @@ public class ConfigHandler<T> implements Terminable {
             }
 
             this.listener = WatchServiceListener.create();
-            this.base = this.listener.listenToConfiguration(file ->
-                            GsonConfigurationLoader.builder()
-                                    .defaultOptions(opts -> opts.shouldCopyDefaults(true))
-                                    .path(file)
-                                    .build(), configFile);
+            this.base =
+                this.listener.listenToConfiguration(
+                        file -> GsonConfigurationLoader.builder().defaultOptions(opts -> opts.shouldCopyDefaults(true)).path(file).build(),
+                        configFile
+                    );
 
-            this.listener.listenToFile(configFile, event -> {
-                Services.provide(clazz, getConfig());
-            });
+            this.listener.listenToFile(
+                    configFile,
+                    event -> {
+                        Services.provide(clazz, getConfig());
+                    }
+                );
 
             this.config = this.base.referenceTo(clazz);
             this.base.save();

@@ -1,10 +1,10 @@
 package net.odinmc.core.common.module.data;
 
+import java.util.List;
 import net.odinmc.core.common.scheduling.Promise;
 
-import java.util.List;
-
 public class ServerGroupData {
+
     private final DataModule dataModule;
     private final String like;
 

@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerData extends ConcurrentHashMap<String, Object> {
+
     private final int id;
     private final UUID uuid;
     private final String registerName;
@@ -18,7 +19,19 @@ public class PlayerData extends ConcurrentHashMap<String, Object> {
     private final Long lastLogoutTime;
     private final String lastLoginServerAddress;
 
-    public PlayerData(int id, UUID uuid, String registerName, long registerTime, InetAddress registerAddress, String registerServerAddress, String lastLoginName, long lastLoginTime, InetAddress lastLoginAddress, Long lastLogoutTime, String lastLoginServerAddress) {
+    public PlayerData(
+        int id,
+        UUID uuid,
+        String registerName,
+        long registerTime,
+        InetAddress registerAddress,
+        String registerServerAddress,
+        String lastLoginName,
+        long lastLoginTime,
+        InetAddress lastLoginAddress,
+        Long lastLogoutTime,
+        String lastLoginServerAddress
+    ) {
         this.id = id;
         this.uuid = uuid;
         this.registerName = registerName;

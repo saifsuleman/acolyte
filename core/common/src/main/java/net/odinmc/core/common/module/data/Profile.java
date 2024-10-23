@@ -3,12 +3,7 @@ package net.odinmc.core.common.module.data;
 import java.util.List;
 import java.util.UUID;
 
-public record Profile(
-        UUID id,
-        String name,
-        List<Property> properties,
-        long lastUpdateTime
-) {
+public record Profile(UUID id, String name, List<Property> properties, long lastUpdateTime) {
     public boolean completed(boolean signature) {
         if (id == null) {
             return false;
@@ -35,9 +30,5 @@ public record Profile(
         return textures;
     }
 
-    public record Property(
-            String name,
-            String value,
-            String signature
-    ) {}
+    public record Property(String name, String value, String signature) {}
 }

@@ -1,12 +1,10 @@
-package net.saifs.odinmc.core.paper.core.module;
+package net.saifs.odinmc.core.paper.core;
 
 import net.odinmc.core.common.events.Plugins;
 import net.odinmc.core.common.network.Network;
 import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
 import net.odinmc.core.common.terminable.module.TerminableModule;
-import net.saifs.odinmc.core.paper.core.PaperCorePlugin;
-import net.saifs.odinmc.core.paper.core.config.Config;
 import net.saifs.odinmc.core.paper.events.PaperEventManager;
 import net.saifs.odinmc.core.paper.network.PaperRedisNetwork;
 import net.saifs.odinmc.core.paper.schedulers.BukkitTasks;
@@ -14,6 +12,7 @@ import org.redisson.Redisson;
 import org.redisson.client.codec.StringCodec;
 
 public class InitiatorModule implements TerminableModule {
+
     @Override
     public void setup(TerminableConsumer consumer) {
         var plugin = Services.load(PaperCorePlugin.class);

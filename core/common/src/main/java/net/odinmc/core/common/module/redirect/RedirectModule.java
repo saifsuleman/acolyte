@@ -1,15 +1,15 @@
 package net.odinmc.core.common.module.redirect;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.odinmc.core.common.network.Network;
 import net.odinmc.core.common.network.NetworkChannel;
 import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
 import net.odinmc.core.common.terminable.module.TerminableModule;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class RedirectModule<P> implements TerminableModule {
+
     protected static final int LOOP_THRESHOLD = 3;
 
     protected final Network network = Services.load(Network.class);

@@ -1,15 +1,15 @@
 package net.odinmc.core.common.network.impl;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import net.odinmc.core.common.network.AbstractNetworkChannel;
 import net.odinmc.core.common.network.model.RequestMessage;
 import net.odinmc.core.common.terminable.Terminable;
 import org.redisson.api.RTopic;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 public class RedisNetworkChannel<T> extends AbstractNetworkChannel<T> implements Terminable {
+
     private final RedisNetwork network;
     private final String name;
     private final RTopic topic;
@@ -17,27 +17,29 @@ public class RedisNetworkChannel<T> extends AbstractNetworkChannel<T> implements
 
     public RedisNetworkChannel(RedisNetwork network, String name, Class<T> messageClass) {
         super(name, messageClass);
-
         this.network = network;
         this.name = name;
         this.topic = network.getClient().getTopic(name);
 
-        this.listener = this.topic.addListener(String.class, (channel, msg) -> {
-            var message = this.network.getGson().fromJson(msg, RequestMessage.class);
+        this.listener =
+            this.topic.addListener(
+                    String.class,
+                    (channel, msg) -> {
+                        var message = this.network.getGson().fromJson(msg, RequestMessage.class);
 
-            if (message.network() != null && network.getName() != null
-                    && !Objects.equals(message.network(), network.getName())) {
-                return;
-            }
+                        if (message.network() != null && network.getName() != null && !Objects.equals(message.network(), network.getName())) {
+                            return;
+                        }
 
-            var servers = message.servers();
-            if (!servers.isEmpty() && !servers.contains(network.getServerName())) {
-                return;
-            }
+                        var servers = message.servers();
+                        if (!servers.isEmpty() && !servers.contains(network.getServerName())) {
+                            return;
+                        }
 
-            var request = network.getGson().fromJson(message.message(), messageClass);
-            this.emit(message.sender(), request);
-        });
+                        var request = network.getGson().fromJson(message.message(), messageClass);
+                        this.emit(message.sender(), request);
+                    }
+                );
     }
 
     @Override

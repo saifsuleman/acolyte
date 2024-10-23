@@ -1,6 +1,8 @@
 package net.saifs.odinmc.core.paper.util;
 
 import io.papermc.paper.adventure.PaperAdventure;
+import java.util.Collection;
+import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -9,10 +11,8 @@ import net.minecraft.network.protocol.Packet;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.Optional;
-
 public class PacketUtil {
+
     public static void sendPacket(Collection<Player> players, Packet<?> packet) {
         players.forEach(player -> sendPacket(player, packet));
     }

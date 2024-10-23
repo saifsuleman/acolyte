@@ -1,17 +1,17 @@
 package net.saifs.odinmc.core.paper.events;
 
-import net.odinmc.core.common.scheduling.Promise;
-import org.bukkit.event.Event;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import net.odinmc.core.common.scheduling.Promise;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AsyncDeferredEvent extends Event implements Executor {
+
     private final List<Runnable> deferred = new ArrayList<>();
     private Consumer<Promise<Boolean>> hijacker;
 

@@ -3,18 +3,17 @@ package net.odinmc.core.common.network;
 import java.util.List;
 
 public interface NetworkChannel<T> {
+    void sendTo(String recipient, T message);
 
-  void sendTo(String recipient, T message);
+    void sendToMany(List<String> recipients, T message);
 
-  void sendToMany(List<String> recipients, T message);
+    void sendToAll(T message);
 
-  void sendToAll(T message);
+    void addListener(NetworkChannelListener<T> listener);
 
-  void addListener(NetworkChannelListener<T> listener);
+    String getName();
 
-  String getName();
+    Class<T> getMessageClass();
 
-  Class<T> getMessageClass();
-
-  void close();
+    void close();
 }

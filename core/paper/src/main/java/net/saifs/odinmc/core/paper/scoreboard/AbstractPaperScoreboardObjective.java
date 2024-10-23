@@ -1,16 +1,15 @@
 package net.saifs.odinmc.core.paper.scoreboard;
 
 import com.google.common.base.Preconditions;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import net.kyori.adventure.text.Component;
 import net.odinmc.core.common.util.StringUtil;
 import net.saifs.odinmc.core.paper.scoreboard.interfaces.PaperScoreboard;
 import net.saifs.odinmc.core.paper.scoreboard.interfaces.PaperScoreboardObjective;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
-
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractPaperScoreboardObjective implements PaperScoreboardObjective {
 
@@ -152,5 +151,4 @@ public abstract class AbstractPaperScoreboardObjective implements PaperScoreboar
     protected abstract void updateClear();
 
     protected abstract void updateStyledFormat(NumberFormat styledFormat);
-
 }

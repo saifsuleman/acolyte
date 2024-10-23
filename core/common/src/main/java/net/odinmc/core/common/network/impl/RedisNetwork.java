@@ -9,6 +9,7 @@ import net.odinmc.core.common.terminable.module.TerminableModule;
 import org.redisson.api.RedissonClient;
 
 public abstract class RedisNetwork extends AbstractNetwork implements TerminableModule {
+
     protected final RedissonClient client;
     protected final Gson gson;
 

@@ -1,13 +1,13 @@
-package net.saifs.odinmc.core.paper.core.module.redirect;
+package net.saifs.odinmc.core.paper.module.redirect;
 
+import java.util.Map;
 import net.saifs.odinmc.core.paper.events.AsyncDeferredEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import java.util.Map;
-
 public class AsyncOutboundRedirectEvent extends AsyncDeferredEvent implements Cancellable {
+
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;

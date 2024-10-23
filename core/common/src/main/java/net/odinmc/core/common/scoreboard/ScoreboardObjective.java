@@ -1,12 +1,11 @@
 package net.odinmc.core.common.scoreboard;
 
 public interface ScoreboardObjective {
+    Scoreboard getScoreboard();
 
-  Scoreboard getScoreboard();
+    String getName();
 
-  String getName();
+    void clearScores();
 
-  void clearScores();
-
-  int getMaxScoreNameLength();
+    int getMaxScoreNameLength();
 }

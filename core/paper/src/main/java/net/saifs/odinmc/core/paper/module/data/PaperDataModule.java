@@ -1,7 +1,12 @@
-package net.saifs.odinmc.core.paper.core.module.data;
+package net.saifs.odinmc.core.paper.module.data;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.odinmc.core.common.database.HikariDatabase;
@@ -12,7 +17,7 @@ import net.odinmc.core.common.scheduling.Promise;
 import net.odinmc.core.common.scheduling.Schedulers;
 import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
-import net.saifs.odinmc.core.paper.core.config.Config;
+import net.saifs.odinmc.core.paper.core.Config;
 import net.saifs.odinmc.core.paper.events.Events;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,22 +27,17 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
 public class PaperDataModule extends DataModule {
-    private static final Component ERROR_PLAYER_DATA = Component.text("There was an error loading your player data... Please try again later.", NamedTextColor.RED);
+
+    private static final Component ERROR_PLAYER_DATA = Component.text(
+        "There was an error loading your player data... Please try again later.",
+        NamedTextColor.RED
+    );
 
     private final Ref<Config> config = Services.ref(Config.class);
     private final Map<UUID, PlayerData> playerDataByUUID = new ConcurrentHashMap<>();
     private final Map<Integer, PlayerData> playerDataByID = new ConcurrentHashMap<>();
-    private final Cache<UUID, PlayerData> deferredPlayerData = Caffeine
-            .newBuilder()
-            .expireAfterWrite(30, TimeUnit.SECONDS)
-            .build();
+    private final Cache<UUID, PlayerData> deferredPlayerData = Caffeine.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
 
     @Override
     protected Set<Integer> getPlayerIds() {
@@ -56,29 +56,17 @@ public class PaperDataModule extends DataModule {
 
     @Override
     protected void setupModule(TerminableConsumer consumer) {
-        Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.LOW)
-                .handler(this::onAsyncPlayerPreLogin)
-                .bindWith(consumer);
+        Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.LOW).handler(this::onAsyncPlayerPreLogin).bindWith(consumer);
 
-        Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.MONITOR)
-                .handler(this::onAsyncPlayerPreLoginMonitor)
-                .bindWith(consumer);
+        Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.MONITOR).handler(this::onAsyncPlayerPreLoginMonitor).bindWith(consumer);
 
-        Events.subscribe(PlayerLoginEvent.class, EventPriority.LOWEST)
-                .handler(this::onPlayerLogin)
-                .bindWith(consumer);
+        Events.subscribe(PlayerLoginEvent.class, EventPriority.LOWEST).handler(this::onPlayerLogin).bindWith(consumer);
 
-        Events.subscribe(PlayerLoginEvent.class, EventPriority.MONITOR)
-                .handler(this::onPlayerLoginMonitor)
-                .bindWith(consumer);
+        Events.subscribe(PlayerLoginEvent.class, EventPriority.MONITOR).handler(this::onPlayerLoginMonitor).bindWith(consumer);
 
-        Events.subscribe(PlayerJoinEvent.class, EventPriority.LOWEST)
-                .handler(this::onPlayerJoin)
-                .bindWith(consumer);
+        Events.subscribe(PlayerJoinEvent.class, EventPriority.LOWEST).handler(this::onPlayerJoin).bindWith(consumer);
 
-        Events.subscribe(PlayerQuitEvent.class, EventPriority.LOWEST)
-                .handler(this::onPlayerQuit)
-                .bindWith(consumer);
+        Events.subscribe(PlayerQuitEvent.class, EventPriority.LOWEST).handler(this::onPlayerQuit).bindWith(consumer);
     }
 
     private void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
@@ -97,7 +85,9 @@ public class PaperDataModule extends DataModule {
             } else {
                 var id = playerData.id();
                 var time = System.currentTimeMillis();
-                playerData = new PlayerData(playerData.id(),
+                playerData =
+                    new PlayerData(
+                        playerData.id(),
                         playerData.uuid(),
                         playerData.registerName(),
                         playerData.registerTime(),
@@ -108,7 +98,7 @@ public class PaperDataModule extends DataModule {
                         address,
                         playerData.lastLogoutTime(),
                         serverAddress
-                );
+                    );
                 playerDataRepository.updateLogin(id, name, time, address, serverAddress);
             }
             deferredPlayerData.put(uuid, playerData);
@@ -135,7 +125,7 @@ public class PaperDataModule extends DataModule {
     private void onPlayerLogin(PlayerLoginEvent event) {
         var player = event.getPlayer();
 
-//        bukkit.runAsync(() -> profileRepository.save(nmsAdapter.getProfile(player)));
+        //        bukkit.runAsync(() -> profileRepository.save(nmsAdapter.getProfile(player)));
 
         var playerData = deferredPlayerData.getIfPresent(player.getUniqueId());
         if (playerData == null) {
@@ -171,16 +161,20 @@ public class PaperDataModule extends DataModule {
         var playerData = getPlayerData(event.getPlayer());
         var saveEvent = new AsyncPlayerSaveEvent(event.getPlayer(), playerData);
 
-        Schedulers.async().run(() -> {
-            Events.dispatch(saveEvent);
+        Schedulers
+            .async()
+            .run(() -> {
+                Events.dispatch(saveEvent);
 
-            saveEvent.executeDeferred(databaseExecutor).thenAcceptAsync((ignored) -> {
-                playerDataRepository.updateLogout(playerData.id());
+                saveEvent
+                    .executeDeferred(databaseExecutor)
+                    .thenAcceptAsync(ignored -> {
+                        playerDataRepository.updateLogout(playerData.id());
 
-                playerDataByID.remove(playerData.id());
-                playerDataByUUID.remove(playerData.uuid());
+                        playerDataByID.remove(playerData.id());
+                        playerDataByUUID.remove(playerData.uuid());
+                    });
             });
-        });
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -211,12 +205,7 @@ public class PaperDataModule extends DataModule {
         for (var entry : config.getModules().getData().getDatabases().entrySet()) {
             var name = entry.getKey();
             var info = entry.getValue();
-            databases.put(name, new HikariDatabase(
-                    info.getUrl(),
-                    info.getUsername(),
-                    info.getPassword(),
-                    databaseExecutor
-            ));
+            databases.put(name, new HikariDatabase(info.getUrl(), info.getUsername(), info.getPassword(), databaseExecutor));
         }
     }
 }

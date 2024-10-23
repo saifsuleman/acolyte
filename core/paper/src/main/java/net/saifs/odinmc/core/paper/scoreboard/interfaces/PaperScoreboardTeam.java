@@ -1,41 +1,39 @@
 package net.saifs.odinmc.core.paper.scoreboard.interfaces;
 
+import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.odinmc.core.common.scoreboard.ScoreboardTeam;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Collection;
-
 public interface PaperScoreboardTeam extends ScoreboardTeam {
+    PaperScoreboard getScoreboard();
 
-  PaperScoreboard getScoreboard();
+    Component getTitle();
 
-  Component getTitle();
+    void setTitle(Component title);
 
-  void setTitle(Component title);
+    Component getPrefix();
 
-  Component getPrefix();
+    void setPrefix(Component prefix);
 
-  void setPrefix(Component prefix);
+    Component getSuffix();
 
-  Component getSuffix();
+    void setSuffix(Component suffix);
 
-  void setSuffix(Component suffix);
+    Team.OptionStatus getNameTagVisibility();
 
-  Team.OptionStatus getNameTagVisibility();
+    void setNameTagVisibility(Team.OptionStatus nameTagVisibility);
 
-  void setNameTagVisibility(Team.OptionStatus nameTagVisibility);
+    TextColor getColor();
 
-  TextColor getColor();
+    void setColor(TextColor color);
 
-  void setColor(TextColor color);
+    Collection<String> getEntries();
 
-  Collection<String> getEntries();
+    boolean hasEntry(String entry);
 
-  boolean hasEntry(String entry);
+    void addEntry(String entry);
 
-  void addEntry(String entry);
-
-  boolean removeEntry(String entry);
+    boolean removeEntry(String entry);
 }

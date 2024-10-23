@@ -1,13 +1,13 @@
-package net.saifs.odinmc.core.paper.core.module.redirect;
+package net.saifs.odinmc.core.paper.module.redirect;
 
+import java.util.Map;
+import java.util.UUID;
 import net.odinmc.core.common.module.redirect.RedirectKickMessage;
 import net.saifs.odinmc.core.paper.events.AsyncDeferredEvent;
 import org.bukkit.event.HandlerList;
 
-import java.util.Map;
-import java.util.UUID;
-
 public class AsyncRedirectEvent extends AsyncDeferredEvent {
+
     private static final HandlerList handlers = new HandlerList();
 
     private boolean allowed = true;

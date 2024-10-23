@@ -6,7 +6,9 @@ import net.odinmc.core.common.config.ConfigManager;
 import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
 import net.odinmc.core.common.terminable.composite.CompositeTerminable;
+import net.saifs.odinmc.core.paper.cloud.Cloud;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.incendo.cloud.execution.ExecutionCoordinator;
 
 public class ExtendedJavaPlugin extends JavaPlugin implements TerminableConsumer {
 
@@ -26,6 +28,10 @@ public class ExtendedJavaPlugin extends JavaPlugin implements TerminableConsumer
         Services.provide((Class<ExtendedJavaPlugin>) getClass(), this);
         this.configManager = new ConfigManager(getDataFolder().toPath());
         this.configManager.bindWith(this);
+        var cloud = Cloud.create(this, ExecutionCoordinator.asyncCoordinator());
+        Services.provideBound(Cloud.TYPE, cloud, getClass());
+        var annotationParser = Cloud.createAnnotationParser(getClass());
+        Services.provideBound(Cloud.ANNOTATION_PARSER, annotationParser, getClass());
         this.load();
     }
 

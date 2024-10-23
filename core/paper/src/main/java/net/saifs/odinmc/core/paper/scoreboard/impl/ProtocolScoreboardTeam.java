@@ -2,6 +2,9 @@ package net.saifs.odinmc.core.paper.scoreboard.impl;
 
 import com.google.common.collect.ImmutableMap;
 import io.netty.buffer.Unpooled;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minecraft.ChatFormatting;
@@ -15,10 +18,6 @@ import net.saifs.odinmc.core.paper.util.PacketUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
 public class ProtocolScoreboardTeam extends AbstractPaperScoreboardTeam {
 
     private static final int TEAM_MODE_CREATE = 0;
@@ -28,10 +27,15 @@ public class ProtocolScoreboardTeam extends AbstractPaperScoreboardTeam {
     private static final int TEAM_MODE_REMOVE_PLAYERS = 4;
 
     private static final ImmutableMap<Team.OptionStatus, String> NAME_TAG_VISIBILITY_STRINGS = ImmutableMap.of(
-            Team.OptionStatus.ALWAYS, "always",
-            Team.OptionStatus.NEVER, "never",
-            Team.OptionStatus.FOR_OWN_TEAM, "hideForOtherTeams",
-            Team.OptionStatus.FOR_OTHER_TEAMS, "hideForOwnTeam");
+        Team.OptionStatus.ALWAYS,
+        "always",
+        Team.OptionStatus.NEVER,
+        "never",
+        Team.OptionStatus.FOR_OWN_TEAM,
+        "hideForOtherTeams",
+        Team.OptionStatus.FOR_OTHER_TEAMS,
+        "hideForOwnTeam"
+    );
 
     private final Set<Player> subscribers = new ConcurrentHashSet<>();
 

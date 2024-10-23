@@ -8,8 +8,15 @@ import net.saifs.odinmc.core.paper.scoreboard.NumberFormat;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public class ProtocolScoreboard extends AbstractPaperScoreboard {
+
     @Override
-    protected AbstractPaperScoreboardObjective buildObjective(String name, Component title, String criteria, DisplaySlot slot, NumberFormat styledFormat) {
+    protected AbstractPaperScoreboardObjective buildObjective(
+        String name,
+        Component title,
+        String criteria,
+        DisplaySlot slot,
+        NumberFormat styledFormat
+    ) {
         return new ProtocolScoreboardObjective(this, name, title, criteria, slot, styledFormat);
     }
 

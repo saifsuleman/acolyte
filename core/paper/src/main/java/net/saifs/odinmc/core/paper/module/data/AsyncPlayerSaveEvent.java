@@ -1,4 +1,4 @@
-package net.saifs.odinmc.core.paper.core.module.data;
+package net.saifs.odinmc.core.paper.module.data;
 
 import net.odinmc.core.common.module.data.PlayerData;
 import net.saifs.odinmc.core.paper.events.AsyncDeferredEvent;
@@ -7,6 +7,7 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class AsyncPlayerSaveEvent extends AsyncDeferredEvent {
+
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;

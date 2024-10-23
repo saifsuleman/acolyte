@@ -1,12 +1,12 @@
-package net.saifs.odinmc.core.paper.core.config;
-
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+package net.saifs.odinmc.core.paper.core;
 
 import java.util.List;
 import java.util.Map;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigSerializable
 public class Config {
+
     private Modules modules = new Modules();
 
     public Modules getModules() {
@@ -15,6 +15,7 @@ public class Config {
 
     @ConfigSerializable
     public static class Modules {
+
         private ScriptModule script = new ScriptModule();
         private DataModule data = new DataModule();
         private NetworkModule network = new NetworkModule();
@@ -39,6 +40,7 @@ public class Config {
 
     @ConfigSerializable
     public static class NetworkModule {
+
         private String redisHost = "redis://127.0.0.1:6379";
         private String serverName = "odin";
         private String networkName = "odin";
@@ -51,7 +53,6 @@ public class Config {
             return networkName;
         }
 
-        ;
         public String getServerName() {
             return serverName;
         }
@@ -59,6 +60,7 @@ public class Config {
 
     @ConfigSerializable
     public static class ScriptModule {
+
         private Map<String, String> modules = Map.of("main", "js/");
 
         public Map<String, String> getModules() {
@@ -68,6 +70,7 @@ public class Config {
 
     @ConfigSerializable
     public static class ShardingModule {
+
         private Etcd etcd = new Etcd();
         private Minio minio = new Minio();
 
@@ -81,6 +84,7 @@ public class Config {
 
         @ConfigSerializable
         public static class Etcd {
+
             private List<String> urls = List.of("http://127.0.0.1:2379");
 
             public List<String> getUrls() {
@@ -90,6 +94,7 @@ public class Config {
 
         @ConfigSerializable
         public static class Minio {
+
             private String url = "http://127.0.0.1";
             private int port = 8123;
             private boolean secure = false;
@@ -130,9 +135,8 @@ public class Config {
 
     @ConfigSerializable
     public static class DataModule {
-        private Map<String, DatabaseInfo> databases = Map.of(
-                "default", new DatabaseInfo()
-        );
+
+        private Map<String, DatabaseInfo> databases = Map.of("default", new DatabaseInfo());
 
         public Map<String, DatabaseInfo> getDatabases() {
             return databases;
@@ -140,6 +144,7 @@ public class Config {
 
         @ConfigSerializable
         public static class DatabaseInfo {
+
             private String url = "jdbc:mysql://localhost/default";
             private String username = "root";
             private String password = "password1";

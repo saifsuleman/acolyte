@@ -2,6 +2,9 @@ package net.saifs.odinmc.core.paper.scoreboard.impl;
 
 import com.google.common.collect.ImmutableMap;
 import io.netty.buffer.Unpooled;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,10 +23,6 @@ import net.saifs.odinmc.core.paper.util.PacketUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
 public class ProtocolScoreboardObjective extends AbstractPaperScoreboardObjective {
 
     private static final int OBJECTIVE_MODE_CREATE = 0;
@@ -31,15 +30,26 @@ public class ProtocolScoreboardObjective extends AbstractPaperScoreboardObjectiv
     private static final int OBJECTIVE_MODE_UPDATE = 2;
 
     private static final ImmutableMap<DisplaySlot, Integer> SLOT_POSITIONS = ImmutableMap.of(
-            DisplaySlot.PLAYER_LIST, 0,
-            DisplaySlot.SIDEBAR, 1,
-            DisplaySlot.BELOW_NAME, 2);
+        DisplaySlot.PLAYER_LIST,
+        0,
+        DisplaySlot.SIDEBAR,
+        1,
+        DisplaySlot.BELOW_NAME,
+        2
+    );
 
     private final ProtocolScoreboard scoreboard;
     private final ObjectiveCriteria.RenderType healthDisplay;
     private final Set<Player> subscribers = new ConcurrentHashSet<>();
 
-    public ProtocolScoreboardObjective(ProtocolScoreboard scoreboard, String name, Component title, String criteria, DisplaySlot slot, NumberFormat styledFormat) {
+    public ProtocolScoreboardObjective(
+        ProtocolScoreboard scoreboard,
+        String name,
+        Component title,
+        String criteria,
+        DisplaySlot slot,
+        NumberFormat styledFormat
+    ) {
         super(scoreboard, name, title, slot, styledFormat);
         this.scoreboard = scoreboard;
         this.healthDisplay = criteria.equalsIgnoreCase("health") ? ObjectiveCriteria.RenderType.HEARTS : ObjectiveCriteria.RenderType.INTEGER;

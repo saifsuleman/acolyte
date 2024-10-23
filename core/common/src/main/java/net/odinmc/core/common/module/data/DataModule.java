@@ -1,6 +1,10 @@
 package net.odinmc.core.common.module.data;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.ReentrantLock;
 import net.odinmc.core.common.database.Database;
 import net.odinmc.core.common.network.Network;
 import net.odinmc.core.common.scheduling.Promise;
@@ -9,21 +13,20 @@ import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
 import net.odinmc.core.common.terminable.module.TerminableModule;
 
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
-
 public abstract class DataModule implements TerminableModule {
+
     public static final String DEFAULT_DATABASE = "default";
     private static final long FULL_PLAYER_UPDATE_INTERVAL = 60000L;
 
     protected final Network network = Services.load(Network.class);
     protected final ExecutorService databaseExecutor = new ThreadPoolExecutor(
-            10, 100,
-            1, TimeUnit.MINUTES,
-            new LinkedBlockingQueue<>(),
-            new ThreadFactoryBuilder().setNameFormat("odin-database-executor-%d").build());
+        10,
+        100,
+        1,
+        TimeUnit.MINUTES,
+        new LinkedBlockingQueue<>(),
+        new ThreadFactoryBuilder().setNameFormat("odin-database-executor-%d").build()
+    );
     protected final Map<String, Database> databases = new HashMap<>();
     private final ReentrantLock playerUpdateLock = new ReentrantLock();
     protected PlayerDataRepository playerDataRepository;
@@ -56,10 +59,16 @@ public abstract class DataModule implements TerminableModule {
             throw new RuntimeException(e);
         }
 
-        Schedulers.async().scheduleRepeating(() -> {
-            updateServer();
-            updatePlayers();
-        }, Duration.ofSeconds(1));
+        Schedulers
+            .async()
+            .scheduleRepeating(
+                () -> {
+                    updateServer();
+                    updatePlayers();
+                },
+                Duration.ofSeconds(1)
+            )
+            .bindWith(consumer);
     }
 
     private void updateServer() {
@@ -116,7 +125,6 @@ public abstract class DataModule implements TerminableModule {
 
     public Promise<List<ServerData>> getServersLike(String like) {
         return serverDataRepository.getByNameLike(like);
-
     }
 
     public Database database() {

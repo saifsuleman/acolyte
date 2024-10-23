@@ -1,16 +1,15 @@
 package net.odinmc.core.common.scoreboard;
 
 public interface ScoreboardTeam {
+    Scoreboard getScoreboard();
 
-  Scoreboard getScoreboard();
+    String getName();
 
-  String getName();
+    boolean isFriendlyFire();
 
-  boolean isFriendlyFire();
+    void setFriendlyFire(boolean friendlyFire);
 
-  void setFriendlyFire(boolean friendlyFire);
+    boolean isFriendlyInvisibles();
 
-  boolean isFriendlyInvisibles();
-
-  void setFriendlyInvisibles(boolean friendlyInvisibles);
+    void setFriendlyInvisibles(boolean friendlyInvisibles);
 }

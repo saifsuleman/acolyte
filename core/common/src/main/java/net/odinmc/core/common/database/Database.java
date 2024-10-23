@@ -5,22 +5,21 @@ import java.sql.SQLException;
 import java.util.concurrent.Executor;
 
 public interface Database extends AsyncDatabase {
+    default AsyncDatabase sync() {
+        return async(Runnable::run);
+    }
 
-  default AsyncDatabase sync() {
-    return async(Runnable::run);
-  }
+    AsyncDatabase async();
 
-  AsyncDatabase async();
+    AsyncDatabase async(Executor executor);
 
-  AsyncDatabase async(Executor executor);
+    Connection getConnection() throws SQLException;
 
-  Connection getConnection() throws SQLException;
+    String getURL();
 
-  String getURL();
+    String getUsername();
 
-  String getUsername();
+    String getPassword();
 
-  String getPassword();
-
-  Executor getExecutor();
+    Executor getExecutor();
 }

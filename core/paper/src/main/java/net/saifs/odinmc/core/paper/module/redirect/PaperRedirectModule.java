@@ -1,7 +1,11 @@
-package net.saifs.odinmc.core.paper.core.module.redirect;
+package net.saifs.odinmc.core.paper.module.redirect;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Executor;
 import net.odinmc.core.common.module.data.DataModule;
 import net.odinmc.core.common.module.redirect.*;
 import net.odinmc.core.common.scheduling.Schedulers;
@@ -10,12 +14,8 @@ import net.saifs.odinmc.core.paper.events.Events;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Executor;
-
 public class PaperRedirectModule extends RedirectModule<Player> {
+
     private static final int loopThreshold = 3;
 
     private final Gson gson = new GsonBuilder().create();
@@ -31,25 +31,32 @@ public class PaperRedirectModule extends RedirectModule<Player> {
     }
 
     public void redirect(Player player, String server, Map<String, Object> additionalData, RedirectKickCallback kickCallback, int loop) {
-        var cache = redirectCache.computeIfAbsent(player.getUniqueId(), (ignored) -> new PlayerRedirectCache());
+        var cache = redirectCache.computeIfAbsent(player.getUniqueId(), ignored -> new PlayerRedirectCache());
 
         if (!cache.tryRedirect(server, kickCallback, additionalData)) {
             return;
         }
 
-        Schedulers.async().run(() -> {
-            var outboundEvent = new AsyncOutboundRedirectEvent(player, server, additionalData);
-            Events.dispatch(outboundEvent);
-            outboundEvent.executeDeferred(executor).thenAcceptAsync((success) -> {
-                if (!success) {
-                    kickCallback.onKick("Something went wrong... (incomplete future)");
-                    return;
-                }
+        Schedulers
+            .async()
+            .run(() -> {
+                var outboundEvent = new AsyncOutboundRedirectEvent(player, server, additionalData);
+                Events.dispatch(outboundEvent);
+                outboundEvent
+                    .executeDeferred(executor)
+                    .thenAcceptAsync(success -> {
+                        if (!success) {
+                            kickCallback.onKick("Something went wrong... (incomplete future)");
+                            return;
+                        }
 
-                var serialized = gson.toJson(additionalData);
-                requestChannel.sendTo(server, new RedirectRequestMessage(player.getUniqueId(), outboundEvent.getDestination(), serialized, loop));
+                        var serialized = gson.toJson(additionalData);
+                        requestChannel.sendTo(
+                            server,
+                            new RedirectRequestMessage(player.getUniqueId(), outboundEvent.getDestination(), serialized, loop)
+                        );
+                    });
             });
-        });
     }
 
     @Override
@@ -57,18 +64,23 @@ public class PaperRedirectModule extends RedirectModule<Player> {
     protected void onRedirectMessage(String server, RedirectRequestMessage message) {
         var event = new AsyncRedirectEvent(message.uuid(), server, gson.fromJson(message.additionalData(), Map.class));
         Events.dispatch(event);
-        event.executeDeferred(executor).thenAcceptAsync(success -> {
-            if (!success) {
-                this.kickChannel.sendTo(server, new RedirectKickMessage(event.getUUID(), "Something went wrong processing your redirect.", message.loop()));
-                return;
-            }
+        event
+            .executeDeferred(executor)
+            .thenAcceptAsync(success -> {
+                if (!success) {
+                    this.kickChannel.sendTo(
+                            server,
+                            new RedirectKickMessage(event.getUUID(), "Something went wrong processing your redirect.", message.loop())
+                        );
+                    return;
+                }
 
-            if (event.isAllowed()) {
-                network.redirect(network.getServerName(), message.uuid());
-            } else {
-                kickChannel.sendTo(server, new RedirectKickMessage(event.getUUID(), event.getKickMessage(), message.loop()));
-            }
-        });
+                if (event.isAllowed()) {
+                    network.redirect(network.getServerName(), message.uuid());
+                } else {
+                    kickChannel.sendTo(server, new RedirectKickMessage(event.getUUID(), event.getKickMessage(), message.loop()));
+                }
+            });
     }
 
     @Override
