@@ -57,15 +57,10 @@ public class PaperDataModule extends DataModule {
     @Override
     protected void setupModule(TerminableConsumer consumer) {
         Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.LOW).handler(this::onAsyncPlayerPreLogin).bindWith(consumer);
-
         Events.subscribe(AsyncPlayerPreLoginEvent.class, EventPriority.MONITOR).handler(this::onAsyncPlayerPreLoginMonitor).bindWith(consumer);
-
         Events.subscribe(PlayerLoginEvent.class, EventPriority.LOWEST).handler(this::onPlayerLogin).bindWith(consumer);
-
         Events.subscribe(PlayerLoginEvent.class, EventPriority.MONITOR).handler(this::onPlayerLoginMonitor).bindWith(consumer);
-
         Events.subscribe(PlayerJoinEvent.class, EventPriority.LOWEST).handler(this::onPlayerJoin).bindWith(consumer);
-
         Events.subscribe(PlayerQuitEvent.class, EventPriority.LOWEST).handler(this::onPlayerQuit).bindWith(consumer);
     }
 

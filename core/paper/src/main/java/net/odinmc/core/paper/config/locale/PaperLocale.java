@@ -1,14 +1,14 @@
-package net.odinmc.core.paper.locale;
+package net.odinmc.core.paper.config.locale;
 
+import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.odinmc.core.common.locale.Locale;
+import net.odinmc.core.common.config.locale.Locale;
 import org.bukkit.command.CommandSender;
 
-import java.util.Map;
-
 public class PaperLocale extends Locale<Component, CommandSender> {
+
     @Override
     protected Component applyReplacements(Component raw, Map<String, Component> replacements) {
         var builder = TextReplacementConfig.builder();
@@ -21,8 +21,8 @@ public class PaperLocale extends Locale<Component, CommandSender> {
     }
 
     @Override
-    protected Component undefined() {
-        return Component.text("undefined", NamedTextColor.RED);
+    protected Component undefined(String name) {
+        return Component.text("undefined: " + name, NamedTextColor.RED);
     }
 
     @Override

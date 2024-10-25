@@ -1,14 +1,10 @@
 package net.odinmc.core.paper.plugin;
 
-import net.odinmc.core.common.annotations.Configurations;
-import net.odinmc.core.common.annotations.Modules;
-import net.odinmc.core.common.config.ConfigManager;
+import net.odinmc.core.common.config.configurate.ConfigManager;
 import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.TerminableConsumer;
 import net.odinmc.core.common.terminable.composite.CompositeTerminable;
-import net.odinmc.core.paper.cloud.Cloud;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.incendo.cloud.execution.ExecutionCoordinator;
 
 public class ExtendedJavaPlugin extends JavaPlugin implements TerminableConsumer {
 
@@ -28,31 +24,11 @@ public class ExtendedJavaPlugin extends JavaPlugin implements TerminableConsumer
         Services.provide((Class<ExtendedJavaPlugin>) getClass(), this);
         this.configManager = new ConfigManager(getDataFolder().toPath());
         this.configManager.bindWith(this);
-        var cloud = Cloud.create(this, ExecutionCoordinator.asyncCoordinator());
-        Services.provideBound(Cloud.TYPE, cloud, getClass());
-        var annotationParser = Cloud.createAnnotationParser(getClass());
-        Services.provideBound(Cloud.ANNOTATION_PARSER, annotationParser, getClass());
         this.load();
     }
 
     @Override
     public final void onEnable() {
-        var configs = getClass().getDeclaredAnnotationsByType(Configurations.class);
-        var modules = getClass().getDeclaredAnnotationsByType(Modules.class);
-
-        for (var config : configs) {
-            for (var entry : config.value()) {
-                configManager.initConfig(entry);
-            }
-        }
-
-        for (var module : modules) {
-            for (var entry : module.value()) {
-                var m = Services.getOrProvide(entry);
-                m.bindModuleWith(this);
-            }
-        }
-
         enable();
     }
 

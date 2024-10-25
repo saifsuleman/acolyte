@@ -31,6 +31,14 @@ public class Services {
         return Services.PROVIDER.get().get(serviceType);
     }
 
+    public static <T> Optional<T> remove(final Class<T> serviceClass) {
+        return Services.remove(TypeToken.of(serviceClass));
+    }
+
+    public static <T> Optional<T> remove(final TypeToken<T> serviceType) {
+        return Services.PROVIDER.get().remove(serviceType);
+    }
+
     public static <T> Ref<T> ref(TypeToken<T> serviceType) {
         return Services.PROVIDER.get().ref(serviceType);
     }

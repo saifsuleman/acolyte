@@ -16,6 +16,8 @@ public interface ServiceProvider {
 
     <T> Ref<T> refBound(@NotNull TypeToken<T> serviceType, @NotNull Object bound);
 
+    <T> Optional<T> remove(TypeToken<T> serviceType);
+
     @NotNull
     <T, I extends T> I provide(@NotNull TypeToken<T> serviceType, @NotNull I instance);
 

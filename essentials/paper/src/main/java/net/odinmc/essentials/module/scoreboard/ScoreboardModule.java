@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public class ScoreboardModule implements TerminableModule {
+
     private final AsyncPlayerStore players = Services.load(AsyncPlayerStore.class);
     private final PaperScoreboard scoreboard = Services.load(PaperScoreboard.class);
     private final ScoreboardConfig config = Services.load(ScoreboardConfig.class);

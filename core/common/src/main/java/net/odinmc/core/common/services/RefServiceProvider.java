@@ -35,6 +35,11 @@ final class RefServiceProvider implements ServiceProvider {
         return (Ref<T>) map.ref(serviceType);
     }
 
+    @Override
+    public <T> Optional<T> remove(TypeToken<T> serviceType) {
+        return Optional.ofNullable((T) services.remove(serviceType));
+    }
+
     @NotNull
     @Override
     public <T, I extends T> I provide(@NotNull final TypeToken<T> serviceType, @NotNull final I instance) {

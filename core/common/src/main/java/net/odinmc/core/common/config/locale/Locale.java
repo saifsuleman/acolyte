@@ -1,15 +1,16 @@
-package net.odinmc.core.common.locale;
+package net.odinmc.core.common.config.locale;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Locale<T, R> {
+
     private final Map<String, T> globalConfig = new HashMap<>();
     private final Map<String, T> serverConfig = new HashMap<>();
 
     protected abstract T applyReplacements(T raw, Map<String, T> replacements);
 
-    protected abstract T undefined();
+    protected abstract T undefined(String name);
 
     protected abstract void chat(R receiver, String name, Map<String, T> replacements);
 
@@ -31,7 +32,7 @@ public abstract class Locale<T, R> {
             message = globalConfig.get(name);
         }
         if (message == null) {
-            message = undefined();
+            message = undefined(name);
         }
 
         if (replacements == null || replacements.isEmpty()) {

@@ -1,19 +1,10 @@
 package net.odinmc.core.paper.cloud;
 
-import com.google.common.reflect.TypeToken;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
-import io.papermc.paper.plugin.bootstrap.PluginBootstrapContextImpl;
-import io.papermc.paper.plugin.configuration.PluginMeta;
 import lombok.SneakyThrows;
-import net.odinmc.core.common.services.Services;
 import net.odinmc.core.common.terminable.Terminable;
-import net.odinmc.core.common.util.ReflectionUtil;
-import net.odinmc.core.paper.plugin.ExtendedJavaPlugin;
+import net.odinmc.core.common.terminable.TerminableConsumer;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
-import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.meta.CommandMeta;
@@ -25,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Cloud implements Terminable {
+
     private final PaperCommandManager<CommandSender> commandManager;
     private final AnnotationParser<CommandSender> annotationParser;
     private final CloudBootstrapHack hack;
@@ -35,27 +27,39 @@ public class Cloud implements Terminable {
         this.hack = hack;
     }
 
-    public void register(Object...instances) {
-        annotationParser.parse(instances);
-        hack.fire();
-    }
-
-    public void register() {
-        hack.fire();
+    public static Cloud create(@NotNull final TerminableConsumer consumer) {
+        return Cloud.create(consumer, ExecutionCoordinator.asyncCoordinator());
     }
 
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public static Cloud create(
-        @NotNull final ExecutionCoordinator<CommandSender> coordinator
-    ) {
+    public static Cloud create(@NotNull final TerminableConsumer consumer, @NotNull final ExecutionCoordinator<CommandSender> coordinator) {
         final var senderMapper = new CommandSenderMapper();
         final var hack = new CloudBootstrapHack();
         final var manager = PaperCommandManager.builder(senderMapper).executionCoordinator(coordinator).buildBootstrapped(hack.getContext());
         manager.settings().set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true);
         manager.settings().set(ManagerSetting.OVERRIDE_EXISTING_COMMANDS, true);
         var parser = new AnnotationParser<>(manager, CommandSender.class, p -> CommandMeta.empty());
-        return new Cloud(manager, parser, hack);
+        var cloud = new Cloud(manager, parser, hack);
+        cloud.bindWith(consumer);
+        return cloud;
+    }
+
+    public PaperCommandManager<CommandSender> commandManager() {
+        return commandManager;
+    }
+
+    public AnnotationParser<CommandSender> annotationParser() {
+        return annotationParser;
+    }
+
+    public void register(Object... instances) {
+        annotationParser.parse(instances);
+        hack.fire();
+    }
+
+    public void register() {
+        hack.fire();
     }
 
     public void registerBaseHelpCommand(
@@ -78,10 +82,7 @@ public class Cloud implements Terminable {
         commandManager.command(permission == null ? help : help.permission(permission));
     }
 
-    public void registerHelpCommand(
-        @NotNull final Command.Builder<CommandSender> builder,
-        @NotNull final String command
-    ) {
+    public void registerHelpCommand(@NotNull final Command.Builder<CommandSender> builder, @NotNull final String command) {
         registerHelpCommand(builder, command, null);
     }
 

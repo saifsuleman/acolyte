@@ -1,8 +1,9 @@
-package net.odinmc.core.common.locale;
+package net.odinmc.core.common.config.locale;
 
 import java.util.Map;
 
 public class ScopedLocale<T, R> extends Locale<T, R> {
+
     private final String qualifier;
     private final Locale<T, R> delegate;
 
@@ -26,8 +27,8 @@ public class ScopedLocale<T, R> extends Locale<T, R> {
     }
 
     @Override
-    protected T undefined() {
-        return delegate.undefined();
+    protected T undefined(String name) {
+        return delegate.undefined(name);
     }
 
     @Override

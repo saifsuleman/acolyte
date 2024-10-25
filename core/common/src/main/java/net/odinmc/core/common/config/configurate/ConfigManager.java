@@ -1,4 +1,4 @@
-package net.odinmc.core.common.config;
+package net.odinmc.core.common.config.configurate;
 
 import java.nio.file.Path;
 import net.odinmc.core.common.terminable.Terminable;

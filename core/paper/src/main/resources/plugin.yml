@@ -1,3 +1,4 @@
-name: OdinCore
-main: net.odinmc.core.paper.PaperCorePlugin
-version: 1.0-SNAPSHOT
+---
+name: "OdinCore"
+main: "net.odinmc.core.paper.PaperCorePlugin"
+version: "1.0-SNAPSHOT"
